@@ -6,7 +6,7 @@ class ChatEntriesModel
     {
         $this->sql = new SQLite3("site.db");
         $this->sql->exec(
-            "CREATE TABLE chat_entries (
+            "CREATE TABLE IF NOT EXISTS chat_entries (
                 id INTEGER PRIMARY KEY,
                 user_id INTEGER,
                 content TEXT,

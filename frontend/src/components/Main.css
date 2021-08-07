@@ -1,0 +1,24 @@
+div.chatbox {
+  height: 500px;
+  overflow: scroll;
+}
+
+input.chatinput {
+  width: 500px;
+}
+
+div.chatentry {
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  grid-template-rows: 20px 1fr;
+}
+
+p {
+  margin: 0 0 0 0;
+}
+
+div.chatentry img {
+  width: 50px;
+  grid-row-start: 1;
+  grid-row-end: span 2;
+}

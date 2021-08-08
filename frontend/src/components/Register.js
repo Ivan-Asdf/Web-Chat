@@ -1,3 +1,9 @@
+import axios from "axios";
+
+import API_HOST from "../config";
+
+axios.defaults.withCredentials = true;
+
 export default function Register() {
     function onSubmit(e) {
         e.preventDefault();
@@ -7,22 +13,18 @@ export default function Register() {
         formData.append("username", username);
         formData.append("password", password);
 
-        fetch("http://127.0.0.1:5000/register.php", {
-            method: "POST",
-            body: formData
-        })
+        axios.post(API_HOST + "/register.php", formData)
         .then((response) => {
-            if (response.status === 200) {
-                window.location.href = "/login";
-                return response.text();
-            } else {
-                console.log("register.php HTTP ERROR: ", response.status)
+            switch (response.status) {
+                case 200:
+                    window.location.href = "/login";
+                    break;
+                default:
+                    console.log("register.php HTTP ERROR: ", response.status)
+                    break;
             }
         })
-        .then((text) => console.log(text))
-        .catch((e) => {
-          console.log("register.php ERROR: ", e);
-        });
+        .catch(e => console.log("register.php ERROR: ", e));
     }
     return (
         <>

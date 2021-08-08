@@ -1,77 +1,72 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Pusher from "pusher-js";
+import axios from "axios";
+
+import API_HOST from "../config";
+
+import ChatBox from "./ChatBox";
 
 import "./Main.css";
 
-import ChatBox from "./ChatBox";
+axios.defaults.withCredentials = true;
 
 export default function Main() {
   const [chatEntries, setChatEntries] = useState();
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/get_all_chatentries.php", { credentials: "include" })
+    axios
+      .get(API_HOST + "/get_all_chatentries.php")
       .then((response) => {
-        if (response.status === 200)
-          return response.json();
-        else if (response.status === 401)
-          window.location.href = "/login";
-        else
-          console.log("index.php HTTP ERROR: ", response.status);
+        switch (response.status) {
+          case 200:
+            // console.log("PHP", response.data);
+            setChatEntries(response.data);
+            break;
+          case 401:
+            window.location.href = "/login";
+            break;
+          default:
+            console.log("index.php HTTP ERROR: ", response.status);
+            break;
+        }
       })
-      .then((json) => {
-        console.log("PHP", json);
-        setChatEntries(json);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+      .catch((e) => console.log("index.php ERROR:", e));
 
     // Subscribe to pusher
     // Pusher.logToConsole = true;
     var pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
       cluster: "eu",
     });
-    
+
     var channel = pusher.subscribe("my-channel");
     channel.bind("my-event", (data) => {
-        setChatEntries(chatEntries => [...chatEntries, data])
+      setChatEntries((chatEntries) => [...chatEntries, data]);
     });
   }, []);
 
-
-  function onLogout() {
-    fetch("http://127.0.0.1:5000/logout.php", {
-      credentials: "include",
-    })
+  function logoutClicked() {
+    axios
+      .get(API_HOST + "/logout.php")
       .then((response) => {
-        if (response.status === 200) {
-          window.location.href = "/login";
-        } else {
-          // SOMETING WONG SHOULD HAPPEN
-          console.log("HTTP ERROR: ", response.status);
+        switch (response.status) {
+          case 200:
+            window.location.href = "/login";
+            break;
+          default:
+            console.log("HTTP ERROR: ", response.status);
+            break;
         }
-        return response.text();
       })
-      .then((text) => {
-        console.log("PHP_LOGOUT", text);
-      })
-      .catch((e) => {
-        console.log("PHP_LOGOUT_ERROR", e);
-      });
+      .catch((e) => console.log("logout.php ERROR", e));
   }
 
   function sendClicked(e) {
     e.preventDefault();
     const text = e.target.elements.text.value;
-    console.log(text);
-
     const formData = new FormData();
     formData.append("content", text);
 
-    fetch("http://127.0.0.1:5000/add_chatentry.php", {
-      method: "POST",
-      body: formData,
-      credentials: "include"
-    })
+    axios
+      .post(API_HOST + "/add_chatentry.php", formData)
       .then((response) => response.text())
       .then((text) => console.log("PHP add_chatentry.php", text))
       .catch((error) => console.log("ERROR: ", error));
@@ -84,7 +79,7 @@ export default function Main() {
         <input className="chatinput" type="text" name="text" required />
         <input type="submit" value="send" />
       </form>
-      <button onClick={onLogout}>Logout</button>
+      <button onClick={logoutClicked}>Logout</button>
     </div>
   );
 }

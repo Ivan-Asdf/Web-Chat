@@ -1,3 +1,9 @@
+import axios from "axios";
+
+import API_HOST from "../config";
+
+axios.defaults.withCredentials = true;
+
 export default function Login() {
   function onSubmit(e) {
     e.preventDefault();
@@ -7,24 +13,21 @@ export default function Login() {
     formData.append("username", username);
     formData.append("password", password);
 
-    fetch("http://127.0.0.1:5000/login.php", {
-      method: "POST",
-      body: formData,
-      credentials: "include"
-    })
+    axios
+      .post(API_HOST + "/login.php", formData)
       .then((response) => {
-        if (response.status === 200) {
-          window.location.href = "/";
-        } else {
-          console.log("login.php HTTP ERROR: ", response.status);
+        switch (response.status) {
+          case 200:
+            window.location.href = "/";
+            break;
+          default:
+            console.log("login.php HTTP ERROR: ", response.status);
+            break;
         }
-        return response.text();
       })
-      .then((text) => console.log(text))
-      .catch((e) => {
-        console.log("login.php ERROR: ", e);
-      });
+      .catch(e => console.log("login.php ERROR: ", e));
   }
+
   return (
     <>
       <h2>Login: </h2>

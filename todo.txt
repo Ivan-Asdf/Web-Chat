@@ -1,4 +1,2 @@
-implement getenv for jwt secret, pusher secret
-
 generall refactor
     axios

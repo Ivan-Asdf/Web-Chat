@@ -27,8 +27,7 @@ export default function Main() {
 
     // Subscribe to pusher
     // Pusher.logToConsole = true;
-
-    var pusher = new Pusher("44a73a86f03133cb77c9", {
+    var pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
       cluster: "eu",
     });
     

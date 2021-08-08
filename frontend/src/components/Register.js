@@ -13,7 +13,7 @@ export default function Register() {
         })
         .then((response) => {
             if (response.status === 200) {
-                // window.location.href = "/login";
+                window.location.href = "/login";
                 return response.text();
             } else {
                 console.log("register.php HTTP ERROR: ", response.status)

@@ -1,15 +1,24 @@
 <?php
-namespace App;
+namespace App\Handlers;
 
 use Firebase\JWT\JWT;
 
+use \App\Models\UsersModel;
+
 class JwtHandler {
     private $secret_key = "example_key";
+    private $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UsersModel();
+    }
 
     public function generateJwt(string $username) {
+        $userId = $this->userModel->getUserId($username);
         $time = time();
         $payload = array(
-            "user" => $username,
+            "user_id" => $userId,
             "iat" => $time,
         );
         $jwt = JWT::encode($payload, $this->secret_key);
@@ -25,6 +34,8 @@ class JwtHandler {
             echo $e;
             return false;
         }
-        return $decoded->user;
+        // Check if user exists
+        $username = $this->userModel->getUsername($decoded->user_id);
+        return array("id" => $decoded->user_id, "username" => $username);
     }
 }

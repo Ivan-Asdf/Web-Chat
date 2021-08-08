@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Models;
 
 class UsersModel {
     public function __construct()
@@ -30,17 +30,14 @@ class UsersModel {
              VALUES(\"$username\", \"$passwordHash\")");
     }
 
-    public function authUser(string $username, string $password) {
+    public function getHash(string $username) : string {
         $statement = $this->sql->prepare("SELECT * FROM users WHERE username=:username");
         $statement->bindValue(":username", $username);
         $query = $statement->execute();
 
         $row = $query->fetchArray();
 
-        if (!password_verify($password, $row["password"]))
-            return false;
-        else 
-            return true;
+        return $row["password"];
     }
 
     public function getUserId(string $username) {
@@ -51,5 +48,15 @@ class UsersModel {
         $row = $query->fetchArray();
 
         return $row['id'];
+    }
+
+    public function getUsername(string $userId) {
+        $statement = $this->sql->prepare("SELECT * FROM users WHERE id=:id");
+        $statement->bindValue(":id", $userId);
+        $query = $statement->execute();
+
+        $row = $query->fetchArray();
+
+        return $row['username'];
     }
 }

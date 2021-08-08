@@ -8,29 +8,15 @@ import ChatBox from "./ChatBox";
 export default function Main() {
   const [chatEntries, setChatEntries] = useState();
   useEffect(() => {
-    // Check if logged in
-    fetch("http://127.0.0.1:5000/login.php", {
-      method: "POST",
-      credentials: "include",
-    })
+    fetch("http://127.0.0.1:5000/get_all_chatentries.php", { credentials: "include" })
       .then((response) => {
-        if (response.status === 200) {
-          return response.text();
-        } else if (response.status === 401) {
+        if (response.status === 200)
+          return response.json();
+        else if (response.status === 401)
           window.location.href = "/login";
-        } else {
-          console.log("HTTP ERROR: ", response.status);
-        }
+        else
+          console.log("index.php HTTP ERROR: ", response.status);
       })
-      .then((text) => {
-        console.log("PHP_LOGIN", text);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-
-    fetch("http://127.0.0.1:5000/index.php", { credentials: "include" })
-      .then((response) => response.json())
       .then((json) => {
         console.log("PHP", json);
         setChatEntries(json);

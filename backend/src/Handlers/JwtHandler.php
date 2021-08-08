@@ -12,6 +12,9 @@ class JwtHandler {
     public function __construct()
     {
         $this->userModel = new UsersModel();
+        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
+        $dotenv->load();
+        $this->secret_key=$_ENV["JWT_SECRET"];
     }
 
     public function generateJwt(string $username) {
@@ -28,7 +31,6 @@ class JwtHandler {
     public function validateJwt($jwt) {
         try {
             $decoded = JWT::decode($jwt, $this->secret_key, array('HS256'));
-            // echo var_dump($decoded);
         // The jwt is bad.
         } catch (\Exception $e) {
             echo $e;

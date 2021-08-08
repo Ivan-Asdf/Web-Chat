@@ -13,6 +13,6 @@ $id = $chatEntriesModel->addEntry($userData["id"], $content);
 $pushEmitter = new PushEmitter();
 
 $data['id'] = $id;
-$data['user_id'] = $user_id;
+$data['user_id'] = $userData["id"];
 $data['content'] = $content;
 $pushEmitter->emit($data);

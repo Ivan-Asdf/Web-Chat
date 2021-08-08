@@ -1,4 +1,6 @@
 ok so scrap the rest api
 the only php server should be the standalone(no apache, nginx) ws server:
     it serves all the chat_entries
-    
+
+add my classes to composer autoloading
+implement getenv for jwt secret

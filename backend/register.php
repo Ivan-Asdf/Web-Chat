@@ -1,5 +1,7 @@
 <?php
-include "./common/cors_autoload.php";
+include "common/cors_autoload.php";
+
+use App\UsersModel;
 
 $userModel = new UsersModel();
 

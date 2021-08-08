@@ -6,7 +6,7 @@ import ChatBox from "./ChatBox";
 
 export default function Main() {
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/index.php", {credentials: 'same-origin'})
+    fetch("http://127.0.0.1:5000/index.php", { credentials: "include" })
       .then((response) => response.json())
       .then((json) => {
         console.log("PHP", json);
@@ -18,16 +18,17 @@ export default function Main() {
 
     // Check if logged in
     fetch("http://127.0.0.1:5000/login.php", {
-      credentials: 'include'
+        method: "POST",
+      credentials: "include",
     })
       .then((response) => {
-          if (response.status === 200) {
-            return response.text()
-          } else if (response.status === 401) {
-            window.location.href = "/login";
-          } else {
-            console.log("HTTP ERROR: ", response.status)
-          }
+        if (response.status === 200) {
+          return response.text();
+        } else if (response.status === 401) {
+          window.location.href = "/login";
+        } else {
+          console.log("HTTP ERROR: ", response.status);
+        }
       })
       .then((text) => {
         console.log("PHP_LOGIN", text);
@@ -37,8 +38,27 @@ export default function Main() {
       });
   }, []);
 
-  const [chatEntries, setChatEntries] = useState();
+  function onLogout() {
+    fetch("http://127.0.0.1:5000/logout.php", {
+      credentials: "include",
+    }).then((response) => {
+      if (response.status === 200) {
+        window.location.href = "/login";
+    } else {
+        // SOMETING WONG SHOULD HAPPEN
+        console.log("HTTP ERROR: ", response.status);
+    }
+    return response.text();
+    })
+    .then((text) => {
+        console.log("PHP_LOGOUT", text);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
 
+  const [chatEntries, setChatEntries] = useState();
   function sendClicked(e) {
     e.preventDefault();
     const text = e.target.elements.text.value;
@@ -64,6 +84,7 @@ export default function Main() {
         <input className="chatinput" type="text" name="text" required />
         <input type="submit" value="send" />
       </form>
+      <button onClick={onLogout}>Logout</button>
     </div>
   );
 }

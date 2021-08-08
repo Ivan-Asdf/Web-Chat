@@ -10,14 +10,15 @@ export default function Login() {
     fetch("http://127.0.0.1:5000/login.php", {
       method: "POST",
       body: formData,
+      credentials: "include"
     })
       .then((response) => {
         if (response.status === 200) {
-          // window.location.href = "/";
-          return response.text();
+          window.location.href = "/";
         } else {
           console.log("login.php HTTP ERROR: ", response.status);
         }
+        return response.text();
       })
       .then((text) => console.log(text))
       .catch((e) => {

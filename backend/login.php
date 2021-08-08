@@ -1,19 +1,38 @@
 <?php
-include "./common/cors_autoload.php";
+include "common/cors_autoload.php";
 
-// if ($_COOKIE["user_sesh"])
-//     echo "LOGGED IN ALREADY";
-// else
-//     header("HTTP/1.1 401 Unauthorized");
-
-
-// echo var_dump($_COOKIE);
-// setcookie("user_sesh1", "HAZ");
+use App\UsersModel;
+use App\JwtHandler;
+use Firebase\JWT\JWT;
+$key = "example_key";
 
 $username = $_POST["username"];
 $password = $_POST["password"];
 
+$jwtHandler = new JwtHandler;
+
 if ($username && $password) {
     $userModel = new UsersModel;
-    $userModel->authUser($username, $password);
+    if ($userModel->authUser($username, $password)) {
+        $jwt = $jwtHandler->generateJwt($username);
+        setcookie("jwt", $jwt, $options=array("samesite" => "None"));
+        return;
+    } else {
+        header("HTTP/1.1 401 Unauthorized");
+        return;
+    }
+}
+
+$jwt = $_COOKIE["jwt"];
+
+if ($jwt) {
+    if($jwtHandler->validateJwt($jwt)) {
+        return;
+    } else {
+        header("HTTP/1.1 401 Unauthorized");
+        return;
+    }
+} else {
+    header("HTTP/1.1 401 Unauthorized");
+    return;
 }

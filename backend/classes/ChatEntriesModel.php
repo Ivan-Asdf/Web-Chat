@@ -1,10 +1,13 @@
 <?php
+
+namespace App;
+
 class ChatEntriesModel
 {
     private $sql;
     public function __construct()
     {
-        $this->sql = new SQLite3("site.db");
+        $this->sql = new \SQLite3("site.db");
         $this->sql->exec(
             "CREATE TABLE IF NOT EXISTS chat_entries (
                 id INTEGER PRIMARY KEY,

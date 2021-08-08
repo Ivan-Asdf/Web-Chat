@@ -1,9 +1,10 @@
 <?php
+namespace App;
 
 class UsersModel {
     public function __construct()
     {
-        $this->sql = new SQLite3("site.db");
+        $this->sql = new \SQLite3("site.db");
         $this->sql->exec(
             "CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY,
@@ -36,9 +37,9 @@ class UsersModel {
 
         $row = $query->fetchArray();
 
-        $isVerified = password_verify($password, $row["password"]);
-
-        echo $row["id"] . $row["username"] . $row["password"];
-        echo $isVerified;
+        if (!password_verify($password, $row["password"]))
+            return false;
+        else 
+            return true;
     }
 }

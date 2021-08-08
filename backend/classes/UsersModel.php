@@ -18,7 +18,7 @@ class UsersModel {
         // Check if exists
         $query = $this->sql->query("SELECT username FROM users");
         $row = $query->fetchArray();
-        if ($row["username"] = $username) {
+        if ($row["username"] == $username) {
             header("HTTP/1.1 409 Conflict");
             return;
         }
@@ -41,5 +41,15 @@ class UsersModel {
             return false;
         else 
             return true;
+    }
+
+    public function getUserId(string $username) {
+        $statement = $this->sql->prepare("SELECT * FROM users WHERE username=:username");
+        $statement->bindValue(":username", $username);
+        $query = $statement->execute();
+
+        $row = $query->fetchArray();
+
+        return $row['id'];
     }
 }

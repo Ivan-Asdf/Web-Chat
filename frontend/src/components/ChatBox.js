@@ -1,7 +1,7 @@
 import ChatEntry from "./ChatEntry";
 
 export default function ChatBox({ chatEntries }) {
-  console.log("ChatBox", chatEntries);
+  // console.log("ChatBox", chatEntries);
   return (
     <div className="chatbox">
       {chatEntries ? (chatEntries.map((chatEntry) => (

@@ -16,17 +16,15 @@ class JwtHandler {
         return $jwt;
     }
 
-    public function validateJwt($jwt) : bool {
-        echo $_SERVER["DOCUMENT_ROOT"];
-        echo "MAIKATI";
+    public function validateJwt($jwt) {
         try {
             $decoded = JWT::decode($jwt, $this->secret_key, array('HS256'));
-            echo var_dump($decoded);
+            // echo var_dump($decoded);
         // The jwt is bad.
         } catch (\Exception $e) {
             echo $e;
             return false;
         }
-        return true;
+        return $decoded->user;
     }
 }

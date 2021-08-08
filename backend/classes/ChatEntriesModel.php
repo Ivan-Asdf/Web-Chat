@@ -44,5 +44,7 @@ class ChatEntriesModel
         $this->sql->exec(
             "INSERT INTO chat_entries(user_id, content)
              VALUES(\"$user_id\", \"$content\")");
+
+        return $this->sql->lastInsertRowID();
     }
 }

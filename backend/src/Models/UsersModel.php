@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Models;
 
-class UsersModel {
+class UsersModel
+{
     public function __construct()
     {
         $this->sql = new \SQLite3("site.db");
@@ -14,7 +16,8 @@ class UsersModel {
         );
     }
 
-    public function addUser(string $username, string $password) {
+    public function addUser(string $username, string $password)
+    {
         // Check if exists
         $query = $this->sql->query("SELECT username FROM users");
         $row = $query->fetchArray();
@@ -24,23 +27,30 @@ class UsersModel {
         }
 
         // Hash and salt
-        $passwordHash = password_hash($password , PASSWORD_DEFAULT);
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
         $this->sql->exec(
             "INSERT INTO users(username, password)
-             VALUES(\"$username\", \"$passwordHash\")");
+             VALUES(\"$username\", \"$passwordHash\")"
+        );
     }
 
-    public function getHash(string $username) : string {
+    public function getHash(string $username): string
+    {
         $statement = $this->sql->prepare("SELECT * FROM users WHERE username=:username");
         $statement->bindValue(":username", $username);
         $query = $statement->execute();
+        if (!$query)
+            return false;
 
         $row = $query->fetchArray();
+        if (!$row)
+            return false;
 
         return $row["password"];
     }
 
-    public function getUserId(string $username) {
+    public function getUserId(string $username)
+    {
         $statement = $this->sql->prepare("SELECT * FROM users WHERE username=:username");
         $statement->bindValue(":username", $username);
         $query = $statement->execute();
@@ -50,12 +60,18 @@ class UsersModel {
         return $row['id'];
     }
 
-    public function getUsername(string $userId) {
+    public function getUsername(string $userId)
+    {
+        error_log($userId);
         $statement = $this->sql->prepare("SELECT * FROM users WHERE id=:id");
         $statement->bindValue(":id", $userId);
         $query = $statement->execute();
+        if (!$query)
+            return false;
 
         $row = $query->fetchArray();
+        if (!$row)
+            return false;
 
         return $row['username'];
     }

@@ -7,7 +7,7 @@ $jwtHandler = new App\Handlers\JwtHandler;
 $jwt = getallheaders()["Authorization"];
 
 if ($jwt) {
-    if($userData = $jwtHandler->validateJwt($jwt)) {
+    if ($userData = $jwtHandler->validateJwt($jwt)) {
         return $userData;
     } else {
         header("HTTP/1.1 401 Unauthorized");

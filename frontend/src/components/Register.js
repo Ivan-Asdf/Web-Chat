@@ -14,16 +14,16 @@ export default function Register() {
     axios
       .post(API_HOST + "/register.php", formData)
       .then((response) => {
-        switch (response.status) {
-          case 200:
-            window.location.href = "/login";
-            break;
-          default:
-            console.log("register.php HTTP ERROR: ", response.status);
-            break;
-        }
+        window.location.href = "/login";
       })
-      .catch((e) => console.log("register.php ERROR: ", e));
+      .catch((e) => {
+        if (e.response) {
+          console.log("register.php HTTP ERROR:", e.response.status);
+          window.location.href = "/login";
+        } else {
+          console.log("register.php NETWROK ERROR:", e);
+        }
+      });
   }
   return (
     <>

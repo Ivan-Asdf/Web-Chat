@@ -13,17 +13,17 @@ export default function Login() {
     axios
       .post(API_HOST + "/login.php", formData)
       .then((response) => {
-        switch (response.status) {
-          case 200:
-            localStorage.setItem("jwt", response.data);
-            window.location.href = "/";
-            break;
-          default:
-            console.log("login.php HTTP ERROR: ", response.status);
-            break;
-        }
+        localStorage.setItem("jwt", response.data);
+        window.location.href = "/";
       })
-      .catch((e) => console.log("login.php ERROR: ", e));
+      .catch((e) => {
+        if (e.response) {
+          console.log("index.php HTTP ERROR:", e.response.status);
+          window.location.href = "/login";
+        } else {
+          console.log("index.php NETWROK ERROR:", e);
+        }
+      });
   }
 
   return (

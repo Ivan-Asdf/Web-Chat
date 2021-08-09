@@ -21,34 +21,39 @@ export default function Main() {
         headers: { Authorization: localStorage.getItem("jwt") },
       })
       .then((response) => {
-        switch (response.status) {
-          case 200:
-            // console.log("PHP", response.data);
-            setChatEntries(response.data);
-            break;
-          case 401:
-            window.location.href = "/login";
-            break;
-          default:
-            console.log("index.php HTTP ERROR: ", response.status);
-            break;
-        }
+        setChatEntries(response.data);
+        pusherSubscribe();
       })
-      .catch((e) => console.log("index.php ERROR:", e));
+      .catch((e) => {
+        if (e.response) {
+          console.log("index.php HTTP ERROR:", e.response.status);
+          window.location.href = "/login";
+        } else {
+          console.log("index.php NETWROK ERROR:", e);
+        }
+      });
 
-    // Subscribe to pusher
-    // Pusher.logToConsole = true;
-    var pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
-      cluster: "eu",
-    });
+    function pusherSubscribe() {
+      // Subscribe to pusher
+      // Pusher.logToConsole = true;
+      var pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
+        cluster: "eu",
+        authEndpoint: API_HOST + "/pusher_auth.php",
+        auth: {
+          headers: {
+            Authorization: localStorage.getItem("jwt"),
+          },
+        },
+      });
 
-    var channel = pusher.subscribe("my-channel");
-    channel.bind("my-event", (data) => {
-      setChatEntries((chatEntries) => [...chatEntries, data]);
-    });
-    channel.bind("pusher:subscription_succeeded", () => {
-      console.log("subscription-succeeded");
-    });
+      var channel = pusher.subscribe("private-my-channel");
+      channel.bind("my-event", (data) => {
+        setChatEntries((chatEntries) => [...chatEntries, data]);
+      });
+      channel.bind("pusher:subscription_succeeded", () => {
+        console.log("subscription-succeeded");
+      });
+    }
   }, []);
 
   function sendClicked(e) {
@@ -61,9 +66,13 @@ export default function Main() {
       .post(API_HOST + "/add_chatentry.php", formData, {
         headers: { Authorization: localStorage.getItem("jwt") },
       })
-      .then((response) => response.text())
-      .then((text) => console.log("PHP add_chatentry.php", text))
-      .catch((error) => console.log("ERROR: ", error));
+      .catch((e) => {
+        if (e.response) {
+          console.log("add_chatentry.php HTTP ERROR:", e.response.status);
+        } else {
+          console.log("add_chatentry.php NETWROK ERROR:", e);
+        }
+      });
   }
 
   function logoutClicked() {
@@ -72,16 +81,16 @@ export default function Main() {
         headers: { Authorization: localStorage.getItem("jwt") },
       })
       .then((response) => {
-        switch (response.status) {
-          case 200:
-            window.location.href = "/login";
-            break;
-          default:
-            console.log("HTTP ERROR: ", response.status);
-            break;
-        }
+        window.location.href = "/login";
       })
-      .catch((e) => console.log("logout.php ERROR", e));
+      .catch((e) => {
+        if (e.response) {
+          console.log("logout.php HTTP ERROR:", e.response.status);
+          window.location.href = "/login";
+        } else {
+          console.log("logout.php NETWROK ERROR:", e);
+        }
+      });
   }
 
   return (

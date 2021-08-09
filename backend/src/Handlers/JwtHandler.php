@@ -43,6 +43,9 @@ class JwtHandler
         }
         // Check if user exists
         $username = $this->userModel->getUsername($decoded->user_id);
+        if (!$username)
+            return false;
+
         return array("id" => $decoded->user_id, "username" => $username);
     }
 }

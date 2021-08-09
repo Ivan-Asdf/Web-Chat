@@ -8,13 +8,18 @@ import ChatBox from "./ChatBox";
 
 import "./Main.css";
 
-axios.defaults.withCredentials = true;
-
 export default function Main() {
   const [chatEntries, setChatEntries] = useState();
   useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) {
+      window.location.href = "/login";
+    }
+    
     axios
-      .get(API_HOST + "/get_all_chatentries.php")
+      .get(API_HOST + "/get_all_chatentries.php", {
+        headers: { Authorization: localStorage.getItem("jwt") },
+      })
       .then((response) => {
         switch (response.status) {
           case 200:
@@ -41,11 +46,31 @@ export default function Main() {
     channel.bind("my-event", (data) => {
       setChatEntries((chatEntries) => [...chatEntries, data]);
     });
+    channel.bind("pusher:subscription_succeeded", () => {
+      console.log("subscription-succeeded");
+    });
   }, []);
+
+  function sendClicked(e) {
+    e.preventDefault();
+    const text = e.target.elements.text.value;
+    const formData = new FormData();
+    formData.append("content", text);
+
+    axios
+      .post(API_HOST + "/add_chatentry.php", formData, {
+        headers: { Authorization: localStorage.getItem("jwt") },
+      })
+      .then((response) => response.text())
+      .then((text) => console.log("PHP add_chatentry.php", text))
+      .catch((error) => console.log("ERROR: ", error));
+  }
 
   function logoutClicked() {
     axios
-      .get(API_HOST + "/logout.php")
+      .get(API_HOST + "/logout.php", {
+        headers: { Authorization: localStorage.getItem("jwt") },
+      })
       .then((response) => {
         switch (response.status) {
           case 200:
@@ -59,18 +84,6 @@ export default function Main() {
       .catch((e) => console.log("logout.php ERROR", e));
   }
 
-  function sendClicked(e) {
-    e.preventDefault();
-    const text = e.target.elements.text.value;
-    const formData = new FormData();
-    formData.append("content", text);
-
-    axios
-      .post(API_HOST + "/add_chatentry.php", formData)
-      .then((response) => response.text())
-      .then((text) => console.log("PHP add_chatentry.php", text))
-      .catch((error) => console.log("ERROR: ", error));
-  }
   return (
     <div className="App">
       <h2>Chat app</h2>

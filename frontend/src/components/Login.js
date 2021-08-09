@@ -1,9 +1,6 @@
 import axios from "axios";
 
 import API_HOST from "../config";
-
-axios.defaults.withCredentials = true;
-
 export default function Login() {
   function onSubmit(e) {
     e.preventDefault();
@@ -18,6 +15,7 @@ export default function Login() {
       .then((response) => {
         switch (response.status) {
           case 200:
+            localStorage.setItem("jwt", response.data);
             window.location.href = "/";
             break;
           default:

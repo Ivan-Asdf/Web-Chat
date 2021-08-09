@@ -1,3 +1,5 @@
-generall refactor
-    axios
-    variable api_url
+variable Access-Control-Allow-Origin
+
+discover private pusher channels
+
+start adding other feautures

@@ -1,5 +1,5 @@
 <?php
-include "common/cors_autoload.php";
+require "common/cors_autoload.php";
 
 use App\Handlers\LoginHandler;
 use App\Models\UsersModel;

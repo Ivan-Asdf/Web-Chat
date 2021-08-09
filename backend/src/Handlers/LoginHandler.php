@@ -29,7 +29,7 @@ class LoginHandler
             return;
         } else {
             $jwt = $this->jwtHandler->generateJwt($username);
-            setcookie("jwt", $jwt, $options = array("samesite" => "None"));
+            echo $jwt;
             return;
         }
     }

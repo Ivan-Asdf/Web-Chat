@@ -7,9 +7,11 @@ export default function Register() {
     e.preventDefault();
     const username = e.target.elements.username.value;
     const password = e.target.elements.password.value;
+    const imageBlob = e.target.elements.avatar.files[0];
     const formData = new FormData();
     formData.append("username", username);
     formData.append("password", password);
+    formData.append("avatar", imageBlob);
 
     axios
       .post(API_HOST + "/register.php", formData)
@@ -19,7 +21,6 @@ export default function Register() {
       .catch((e) => {
         if (e.response) {
           console.log("register.php HTTP ERROR:", e.response.status);
-          window.location.href = "/login";
         } else {
           console.log("register.php NETWROK ERROR:", e);
         }
@@ -34,6 +35,14 @@ export default function Register() {
         <br />
         <label htmlFor="password">Password: </label>
         <input type="password" name="password" id="password" />
+        <br />
+        <label htmlFor="avatar">Profile pic: </label>
+        <input
+          type="file"
+          name="avatar"
+          id="avatar"
+          accept="image/png, image/gif, image/jpeg, image/webp"
+        />
         <br />
         <input type="submit" />
       </form>

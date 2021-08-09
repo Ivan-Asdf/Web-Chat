@@ -1,5 +1,8 @@
 variable Access-Control-Allow-Origin
 
-discover private pusher channels
-
 start adding other feautures
+    Show username
+    Select user avatar
+    Make text clean on send and scroll go to bottom
+
+Deploy first working version of this

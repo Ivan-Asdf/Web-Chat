@@ -8,9 +8,12 @@ $userModel = new UsersModel();
 $username = $_POST["username"];
 $password = $_POST["password"];
 
-if ($username && $password) {
-    echo $username . " " . $password;
-    $userModel->addUser($username, $password);
+$tmpFileName = $_FILES["avatar"]["tmp_name"];
+$file = fopen($tmpFileName, "r");
+$fileData = fread($file, filesize($tmpFileName));
+
+if ($username && $password && $fileData) {
+    $userModel->addUser($username, $password, $fileData);
 } else {
     header("HTTP/1.1 400 Bad Request");
 }

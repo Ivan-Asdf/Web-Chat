@@ -75,21 +75,8 @@ export default function Main() {
   }
 
   function logoutClicked() {
-    axios
-      .get(API_HOST + "/logout.php", {
-        headers: { Authorization: localStorage.getItem("jwt") },
-      })
-      .then((response) => {
-        window.location.href = "/login";
-      })
-      .catch((e) => {
-        if (e.response) {
-          console.log("logout.php HTTP ERROR:", e.response.status);
-          window.location.href = "/login";
-        } else {
-          console.log("logout.php NETWROK ERROR:", e);
-        }
-      });
+    localStorage.removeItem("jwt");
+    window.location.href = "/login";
   }
 
   return (

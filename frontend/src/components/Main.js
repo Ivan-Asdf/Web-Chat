@@ -15,7 +15,6 @@ export default function Main() {
     if (!jwt) {
       window.location.href = "/login";
     }
-
     axios
       .get(API_HOST + "/get_all_chatentries.php", {
         headers: { Authorization: localStorage.getItem("jwt") },

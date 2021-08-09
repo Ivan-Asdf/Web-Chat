@@ -4,7 +4,6 @@ namespace App\External;
 
 class PushEmitter
 {
-
     private $options;
     private $pusher;
 

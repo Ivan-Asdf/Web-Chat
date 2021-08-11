@@ -1,5 +1,6 @@
 # Web-Chat
 Simple Web chat app made with react and php
+![Screenshot from 2021-08-11 23-10-35](https://user-images.githubusercontent.com/57415060/129098012-2f11aa8a-0046-4f46-a793-838f241048d0.png)
 
 
 ## Running

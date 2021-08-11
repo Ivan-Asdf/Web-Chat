@@ -2,9 +2,9 @@
 if (!API_HOST) {
   var API_HOST;
   if (process.env.NODE_ENV === "development") {
-    API_HOST = "http://127.0.0.1:5000";
+    API_HOST = process.env.REACT_APP_API_HOST_DEV;
   } else if (process.env.NODE_ENV === "production") {
-    API_HOST = "https://stackoverflow.com/";
+    API_HOST = process.env.REACT_APP_API_HOST_PROD;
   }
 }
 

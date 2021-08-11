@@ -19,6 +19,7 @@ p {
 
 div.chatentry img {
   height: 50px;
+  width: 50px;
   grid-row-start: 1;
   grid-row-end: span 2;
 }

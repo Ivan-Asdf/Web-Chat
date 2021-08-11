@@ -57,7 +57,10 @@ export default function Main() {
 
   function sendClicked(e) {
     e.preventDefault();
-    const text = e.target.elements.text.value;
+    let textInput = e.target.elements.text;
+    const text = textInput.value;
+    textInput.value = "";
+    textInput.focus();
     const formData = new FormData();
     formData.append("content", text);
 

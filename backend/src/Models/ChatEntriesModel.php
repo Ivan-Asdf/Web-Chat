@@ -35,15 +35,15 @@ class ChatEntriesModel
             );
             array_push($results, $row);
         }
-        $json = json_encode($results, JSON_PRETTY_PRINT);
-        echo $json;
+        return $results;
     }
 
     public function addEntry(int $user_id, string $content)
     {
         $this->sql->exec(
             "INSERT INTO chat_entries(user_id, content)
-             VALUES(\"$user_id\", \"$content\")");
+             VALUES(\"$user_id\", \"$content\")"
+        );
 
         return $this->sql->lastInsertRowID();
     }

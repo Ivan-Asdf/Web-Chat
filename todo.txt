@@ -1,8 +1,4 @@
-variable Access-Control-Allow-Origin
-
-start adding other feautures
-    Show username
-    Select user avatar
-    Make text clean on send and scroll go to bottom
 
 Deploy first working version of this
+    variable Access-Control-Allow-Origin
+    make everything easily configurable and deployable

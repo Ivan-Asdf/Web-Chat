@@ -8,4 +8,11 @@ use App\Models\ChatEntriesModel;
 $usersModel         = new UsersModel();
 $chatEntriesModel   = new ChatEntriesModel();
 
-$chatEntriesModel->getEntriesAll();
+$results = $chatEntriesModel->getEntriesAll();
+foreach ($results as &$entry) {
+    $username = $usersModel->getUsername($entry["user_id"]);
+    $entry["username"] = $username;
+}
+
+$json = json_encode($results, JSON_PRETTY_PRINT);
+echo $json;
